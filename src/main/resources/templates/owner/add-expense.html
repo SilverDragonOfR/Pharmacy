@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pharmacy | Add Expenses</title>
+    <meta name="description" content="">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center; 
+            padding-top:200px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto; 
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px; 
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"], input[type="submit"], button {
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: calc(100% - 22px);
+        }
+        input[type="submit"], button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: #0056b3;
+        }
+        .radio-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        .radio-group label {
+            display: inline-block;
+            margin-left: 5px;
+        }
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .top-bar .logo-container {
+            width: 60px;
+            height: 60px; 
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+        
+        .top-bar .company-name {
+            font-size: 28px; 
+            font-weight: bold;
+            letter-spacing: 1px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container"></div>
+        <span class="company-name">MedixPro</span>
+    </div>
+    <div class="container">
+        <h1>Add Expense</h1>
+
+        <form action='#' th:action='@{/owner/add-expense}' method="post" th:object='${newExpense}'>
+            <label for="amount">Amount:</label>
+            <input type="number" th:field="*{amount}" required>
+
+            <label>Expense Type:</label>
+            <div class="radio-group" th:each="type : ${expenseTypes}">
+                <input type="radio" th:field="*{expenseType}" th:value="${type.type}" th:id="${type.type}" required="${type.equals(expenseTypes[0])}">
+                <label th:for="${type.type}" th:text="${type.type}"></label>
+            </div>
+
+            <input type="submit" value="Add">
+        </form>
+
+        <button onclick="expense_type()">Expense Type</button>
+        <button onclick="back()">Back</button>
+    </div>
+</body>
+<script th:inline="javascript">
+    function expense_type() {
+        window.location.assign("/owner/expense-type");
+    }
+    function back() {
+        window.location.assign("/owner/expenses");
+    }
+</script>
+</html>

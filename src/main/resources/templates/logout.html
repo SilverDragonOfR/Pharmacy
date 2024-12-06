@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pharmacy | Logout</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="submit"], button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+        }
+        button {
+            background-color: #ccc;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        button:hover {
+            background-color: #aaa;
+        }
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .top-bar .logo-container {
+            width: 60px; 
+            height: 60px;
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+        
+        .top-bar .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container"></div>
+        <span class="company-name">MedixPro</span>
+    </div>
+    <h2>Logout</h2>
+    <p>Are you sure?</p>
+    <form method="post" th:action="@{/logout}">
+        <input type="submit" value="Logout">
+    </form>
+    <button onclick="back()">Back</button>
+
+    <script th:inline="javascript">
+        function back() {
+            window.location.assign("/");
+        }
+    </script>
+</body>
+</html>

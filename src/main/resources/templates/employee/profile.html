@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pharmacy | Profile</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            padding-top: 200px; 
+
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        div {
+            margin-bottom: 15px;
+        }
+        input {
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .update-button {
+            background-color: #28a745; 
+            border: 2px solid #218838;
+        }
+        .back-button {
+            background-color: #007bff;
+            border: 2px solid #0056b3;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #e0e0e0;
+        }
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .top-bar .logo-container {
+            width: 60px; 
+            height: 60px;
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+        
+        .top-bar .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container"></div>
+        <span class="company-name">MedixPro</span>
+    </div>
+<div class="container">
+    <h1>Your Profile</h1>
+    <div>Username: <span th:text="${username}"></span></div>
+    <div>First Name: <input class="first_name_div" type="text" id="first_name" th:field="${employee.first_name}"></div>
+    <div>Last Name: <input class="last_name_div" type="text" id="last_name" th:field="${employee.last_name}"></div>
+    <div>Address: <input class="address_div" type="text" id="address" th:field="${employee.address}"></div>
+    <div>Date of Joining: <span th:text="${employee.date_of_joining}"></span></div>
+    <div>Role: <span th:text="${employee.emp_role}"></span></div>
+    <div>Salary: <span th:text="${employee.salary}"></span></div>
+    
+    <div>
+        <button class="update-button" onclick="profile_update()">Update</button>
+        <button class="back-button" onclick="back()">Back</button>
+    </div>
+
+    <div>
+        <a href="/update-password">Update Password</a>
+        <a href="/registered-emails">Emails</a>
+        <a href="/registered-phones">Phones</a>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    function back() {
+        window.location.assign("/");
+    }
+    function profile_update() {
+        const first_name = document.querySelector(".first_name_div").value;
+        const last_name = document.querySelector(".last_name_div").value;
+        const address = document.querySelector(".address_div").value;
+        const employee = /*[[${employee}]]*/ {};
+        const mapToSend = {
+            "id": employee.id,
+            "username": employee.username,
+            "password": employee.password,
+            "role": employee.role,
+            "date_of_joining": employee.date_of_joining,
+            "emp_role": employee.emp_role,
+            "salary": employee.salary,
+            "first_name": first_name,
+            "last_name": last_name,
+            "address": address
+        };
+        if (first_name.length > 0 && address.length > 0 && last_name.length > 0) {
+            const token = document.querySelector("meta[name='_csrf']").getAttribute("content");
+            const header = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+            fetch('/employee/profile', {
+                method: 'POST',
+                headers: {
+                    [header]: token,
+                    'charset': 'UTF-8',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(mapToSend),
+            }).then(res => res.json())
+            .then(data => {
+                if (data["message"]) {
+                    window.location.assign("/employee/home");
+                } else {
+                    window.location.assign("/employee/profile");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        }
+    }
+</script>
+
+</body>
+</html>

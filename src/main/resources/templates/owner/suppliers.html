@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pharmacy | All Suppliers</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: auto;
+            background-color: #f8f8f8;
+            padding-top: 100px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .supplier-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        strong {
+            color: #555;
+        }
+
+        a {
+            text-decoration: none;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: 2px solid #218838;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s, border-color 0.3s;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .top-bar .logo-container {
+            width: 60px;
+            height: 60px;
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+
+        .top-bar .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .button-container p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container"></div>
+        <span class="company-name">MedixPro</span>
+    </div>
+
+    <h1>List of Suppliers</h1>
+
+    <div class="supplier-container" th:each="supplier : ${suppliers}">
+        <p><strong>Name:</strong> <span th:text="${supplier.name}"></span></p>
+        <p><strong>Address:</strong> <span th:text="${supplier.address}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${supplier.email}"></span></p>
+        <p><strong>Phone:</strong> <span th:text="${supplier.phone}"></span></p>
+
+        <div class="button-container">
+            <a class="button" th:href="@{/owner/supplier/update(sup_id=${supplier.sup_id})}">Update Supplier</a>
+            <a class="button" th:href="@{/owner/supplier/plan(sup_id=${supplier.sup_id})}">Supplier Plan</a>
+        </div>
+    </div>
+
+    <div><a class="button" href="/owner/addsupplier">Add Supplier</a></div>
+
+    <button onclick="back()">Back</button>
+
+    <script th:inline="javascript">
+        function back() {
+            window.location.assign("/"); 
+        }
+    </script>
+</body>
+</html>

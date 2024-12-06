@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pharmacy | Medicines</title>
+    <meta name="description" content="Pharmacy Medicines List">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #e0e0e0;
+            color: #333;
+            padding-top: 80px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+
+        tr:hover {
+            background-color: #f1c40f;
+        }
+
+        .medicine-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .medicine-card {
+            background-color: #fff;
+            border: 1px solid #bbb;
+            border-radius: 12px;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            border-color: #888;
+            background-color: #f5f5f5;
+        }
+
+        .medicine-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .medicine-card h3 {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .medicine-card p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .medicine-card p strong {
+            color: #333;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s ease;
+        }
+
+        .button-container button:hover {
+            background-color: #6c757d;
+            transform: scale(1.05);
+        }
+
+        .back-button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .back-button-container button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button-container button:hover {
+            background-color: #78a3c9;
+        }
+
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-bar .logo-container {
+            width: 60px;
+            height: 60px;
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+
+        .top-bar .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container"></div>
+        <span class="company-name">MedixPro</span>
+    </div>
+
+<h1>List of Medicines</h1>
+
+<div class="medicine-cards">
+    <div class="medicine-card" th:each="medicine : ${medicines}">
+        <h3 th:text="${medicine.name}">Medicine Name</h3>
+        <p><strong>Company:</strong> <span th:text="${medicine.company}">Company Name</span></p>
+        <p><strong>Price:</strong> <span th:text="${medicine.sprice}">Price</span></p>
+        <p><strong>Utility:</strong> <span th:text="${medicine.utility}">Utility</span></p>
+    </div>
+</div>
+
+<div class="button-container">
+    <button onclick="back()">Back</button>
+</div>
+
+<script th:inline="javascript">
+    function back() {
+        window.location.assign("/");
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pharmacy | All Employees</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: auto;
+            text-align: center;
+            padding-top: 100px;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        div {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        strong {
+            color: #555;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        button, .action-button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        button:hover, .action-button:hover {
+            background-color: #0056b3;
+        }
+        .green-button {
+            background-color: #28a745;
+            border: 2px solid #218838;
+        }
+        .green-button:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .top-bar .logo-container {
+            width: 60px;
+            height: 60px;
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+        .top-bar .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container"></div>
+        <span class="company-name">MedixPro</span>
+    </div>
+    <div class="container">
+        <h1>List of Employees</h1>
+        <div th:each="employee : ${employees}">
+            <p><strong>Full Name:</strong> <span th:text="${employee.first_name + ' ' + employee.last_name}"></span></p>
+            <p><strong>Address:</strong> <span th:text="${employee.address}"></span></p>
+            <p><strong>Date of Joining:</strong> <span th:text="${employee.date_of_joining}"></span></p>
+            <p><strong>Role:</strong> <span th:text="${employee.emp_role}"></span></p>
+            <p><strong>Salary:</strong> <span th:text="${employee.salary}"></span></p>
+                <a th:href="@{/owner/employee/update(username=${employee.username})}" class="action-button">Update</a>
+        </div>
+            <a href="/owner/addemployee" class="action-button">Add Employee</a>
+        <button onclick="back()" class="green-button">Back</button>
+    </div>
+    <script th:inline="javascript">
+        function back() {
+            window.location.assign("/");
+        }
+    </script>
+</body>
+</html>

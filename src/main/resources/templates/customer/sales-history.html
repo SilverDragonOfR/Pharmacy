@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Pharmacy | Sales History</title>
+        <meta name="description" content="">
+        <style>
+            body {
+                padding-top: 100px; 
+            }
+            .printArea {
+                font-family: Arial, sans-serif;
+                padding: 20px;
+                background-color: #fff;
+                color: #333;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                margin: 20px;
+            }
+        
+            .printArea table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+        
+            .printArea th, .printArea td {
+                padding: 12px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }
+        
+            .printArea th {
+                background-color: #28a745;
+                color: white;
+            }
+        
+            .printArea ol {
+                padding-left: 20px;
+            }
+        
+            .printArea ol li {
+                font-size: 14px;
+                color: #555;
+                margin: 5px 0;
+            }
+        
+            .printArea h3 {
+                font-size: 18px;
+                font-weight: bold;
+                margin-top: 20px;
+                color: #333;
+            }
+        
+            .printArea div {
+                font-size: 14px;
+                color: #555;
+                margin-top: 10px;
+            }
+            .top-bar {
+                background-color: #28a745;
+                color: white;
+                padding: 15px 30px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 80px; 
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+            }
+            .top-bar .logo-container {
+                width: 60px; 
+                height: 60px; 
+                background-image: url('/images/logo.jpg'); 
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                margin-right: 20px;
+            }
+    
+            .top-bar .company-name {
+                font-size: 28px; 
+                font-weight: bold;
+                letter-spacing: 1px; 
+            }
+        </style>
+        
+
+    </head>
+
+    <body>
+        <div class="top-bar">
+            <div class="logo-container"></div>
+            <span class="company-name">MedixPro</span>
+        </div>
+        <h1>Purchase History</h1>
+
+        <ul>
+            <li th:each="saleHistory : ${saleHistories}">
+                <div class="printArea">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td th:text="${saleHistory.customer.name}"></td>
+                                <td th:text="${saleHistory.customer.address}"></td>
+                                <td th:text="${saleHistory.sales.date_of_sale}"></td>
+                                <td th:text="'₹'+${saleHistory.sales.total_amount}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+    
+                    <ol>
+                        <li th:each="item : ${saleHistory.items}">
+                            <div th:text="${item.medicine.name} + ' by ' + ${item.medicine.company}+' - ₹' + ${item.medicine.sprice} + '(' + ${item.quantity} + ')'"></div>
+                        </li>
+                    </ol>
+                </div>
+
+                <button onclick="download(this)">Receipt</button>
+                
+                <br><br>
+            </li>
+        </ul>
+
+        <button onclick="back()">Back</button>
+
+    </body>
+
+    <script th:inline="javascript">
+
+        function back() {
+            window.location.assign("/");
+        }
+
+        function download(button) {
+            const printContents = button.parentNode.querySelector("div").innerHTML;
+            w = window.open();
+            w.document.write(printContents);
+            w.print();
+            w.close();
+        }
+    
+    </script>
+</html> 

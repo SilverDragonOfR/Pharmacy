@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pharmacy | Phones</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            padding-top:200px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            max-width: 600px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            cursor: pointer;
+            margin-left: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .new_phone {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .top-bar .logo-container {
+            width: 60px;
+            height: 60px;
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+        
+        .top-bar .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container"></div>
+        <span class="company-name">MedixPro</span>
+    </div>
+    <h1>Registered Phones</h1>
+    <table>
+        <tr th:each="phone : ${phones}">
+            <td th:text="${phone}"></td>
+            <td th:attr="data-phone=${phone}">
+                <button onclick="phone_delete(this)">❌</button>
+            </td>
+        </tr>
+    </table>
+    <div class="input-container">
+        <input class="new_phone" type="phone" id="new-phone" placeholder="Enter new phone">
+        <button onclick="phone_add()">Add</button>
+    </div>
+    <button onclick="back()">Back</button>
+</body>
+<script th:inline="javascript">
+    function validatePhone(phone) {
+        var re = /^\d{10}$/;
+        return re.test(phone);
+    }
+
+    function back() {
+        window.history.back();
+    }
+
+    function phone_delete(button) {
+        const token = document.querySelector("meta[name='_csrf']").getAttribute("content");
+        const header = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+        const delete_phone = button.parentNode.getAttribute('data-phone');
+        const mapToSend = {"delete-phone": delete_phone}
+
+        fetch('/delete-phone', {
+            method: 'POST',
+            headers: {
+                [header]: token,
+                'charset': 'UTF-8',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(mapToSend),
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data["message"])
+            window.location.assign("/registered-phones");
+        })
+        .catch(e => {
+            console.error(e);
+        });
+    }
+
+    function phone_add() {
+        const token = document.querySelector("meta[name='_csrf']").getAttribute("content");
+        const header = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+        const new_phone = document.querySelector(".new_phone").value;
+        const mapToSend = {"new-phone": new_phone}
+
+        if (new_phone.length === 10 && validatePhone(new_phone)) {
+            fetch('/add-phone', {
+                method: 'POST',
+                headers: {
+                    [header]: token,
+                    'charset': 'UTF-8',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(mapToSend),
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data["message"])
+                window.location.assign("/registered-phones");
+            })
+            .catch(e => {
+                console.error(e);
+            });
+        } else {
+            alert("Bad Phone");
+        }
+    }
+</script>
+</html>

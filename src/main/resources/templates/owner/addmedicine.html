@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pharmacy | Add Medicine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding-top: 100px; 
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto; 
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100px;
+            margin-bottom: 10px; 
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px; 
+        }
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .top-bar .logo-container {
+            width: 60px;
+            height: 60px;
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+        .top-bar .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container"></div>
+        <span class="company-name">MedixPro</span>
+    </div>
+    <h2>Add New Medicine</h2>
+    <form th:action="@{/owner/addmedicine}" th:object="${medicineForm}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{medicine.name}"/>
+
+        <label for="company">Company:</label>
+        <input type="text" id="company" th:field="*{medicine.company}"/>
+
+        <label for="cprice">Cost Price:</label>
+        <input type="number" id="cprice" th:field="*{medicine.cprice}"/>
+
+        <label for="sprice">Selling Price:</label>
+        <input type="number" id="sprice" th:field="*{medicine.sprice}"/>
+
+        <label for="time_till_expiry">Time Till Expiry:</label>
+        <input type="number" id="time_till_expiry" th:field="*{medicine.time_till_expiry}"/>
+
+        <label for="utility">Utility:</label>
+        <input type="text" id="utility" th:field="*{medicine.utility}"/>
+
+        <label>Symptoms:</label>
+        <div class="checkbox-group" th:each="symptom : ${symptoms}">
+            <input type="checkbox" th:field="*{selectedSymptoms}" th:value="${symptom.symptom}" id="${symptom.symptom}"/>
+            <label th:for="${symptom.symptom}" th:text="${symptom.symptom}"></label>
+        </div>
+        
+    </form>
+    <div class="button-group">
+        <button type="submit">Submit</button>
+        <button type="button" onclick="back()">Back</button>
+    </div>
+    
+    <script th:inline="javascript">
+        function back() {
+            window.location.assign("/"); 
+        }
+    </script>
+</body>
+</html>

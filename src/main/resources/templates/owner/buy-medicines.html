@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Medicine Catalog</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            padding-top: 100px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        
+
+        .inventory-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .inventory-card {
+            width: calc(33% - 20px);
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: left;
+            box-sizing: border-box;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .inventory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .inventory-card h3 {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .inventory-card p {
+            font-size: 0.9em;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .quantity-controls button {
+            padding: 5px 10px;
+            margin: 0 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .quantity-controls button:hover {
+            background-color: #45a049;
+        }
+
+        .quantity-controls span {
+            width: 30px;
+            text-align: center;
+        }
+
+        .form-control {
+            margin-top: 20px;
+            width: 400px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .top-bar .logo-container {
+            width: 60px; 
+            height: 60px; 
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+        
+        .top-bar .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="logo-container"></div>
+    <span class="company-name">MedixPro</span>
+</div>
+
+<h1>Medicine Catalog</h1>
+
+<select class="form-control" id="dropDownList">
+    <option value="0">Select Supplier</option>
+    <option th:each="supplier : ${suppliers}" th:value="${supplier.sup_id}" th:text="${supplier.name}"></option>
+</select>
+
+<div class="inventory-cards">
+    <div class="inventory-card" th:each="medicine : ${medicines}">
+        <h3 th:text="${medicine.name}"></h3>
+        <p><strong>Company:</strong> <span th:text="${medicine.company}"></span></p>
+        <p><strong>Cost Price:</strong> <span th:text="${medicine.cprice}"></span></p>
+        <p><strong>Selling Price:</strong> <span th:text="${medicine.sprice}"></span></p>
+        <p><strong>Expiry:</strong> <span th:text="${medicine.time_till_expiry}"></span></p>
+        
+        <div class="quantity-controls">
+            <button th:onclick="|decrementQuantity('${medicine.med_id}')|">-</button>
+            <span th:id="'quantity-' + ${medicine.med_id}" 
+                  th:text="${cart[medicine.med_id] != null} ? ${cart[medicine.med_id]} : 0"></span>
+            <button th:onclick="|incrementQuantity('${medicine.med_id}')|">+</button>
+        </div>
+    </div>
+</div>
+
+<div class="button-container">
+    <button onclick="checkout()">Checkout</button>
+    <button onclick="back()">Back</button>
+</div>
+
+<script th:inline="javascript">
+    function back() {
+        window.location.assign("/");
+    }
+
+    let cart = /*[[${cart}]]*/ {};
+
+    document.querySelectorAll('[id^="quantity-"]').forEach(element => {
+        const medId = element.id.split('-')[1];
+        const quantity = cart[medId] || 0;
+        element.textContent = quantity;
+    });
+
+    function incrementQuantity(medId) {
+        const quantityElement = document.getElementById('quantity-' + medId);
+        let currentQuantity = parseInt(quantityElement.textContent);
+        currentQuantity++;
+        quantityElement.textContent = currentQuantity;
+        updateCart(medId, currentQuantity);
+    }
+
+    function decrementQuantity(medId) {
+        const quantityElement = document.getElementById('quantity-' + medId);
+        let currentQuantity = parseInt(quantityElement.textContent);
+        if (currentQuantity > 0) {
+            currentQuantity--;
+            quantityElement.textContent = currentQuantity;
+            updateCart(medId, currentQuantity);
+        }
+    }
+
+    function updateCart(medId, quantity) {
+        if (quantity > 0) {
+            cart[medId] = quantity;
+        } else {
+            delete cart[medId];
+        }
+        const token = document.querySelector("meta[name='_csrf']").getAttribute("content");
+        const header = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+
+        fetch('/owner/cart/update', {
+            method: 'POST',
+            headers: {
+                [header]: token,
+                'charset': 'UTF-8',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(cart),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data["message"]);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }
+
+    function checkout() {
+        const supId = document.getElementById("dropDownList").value;
+        if (supId < 1) {
+            alert("Please select a supplier");
+            return;
+        }
+        const token = document.querySelector("meta[name='_csrf']").getAttribute("content");
+        const header = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+        const mapToSend = {"sup_id" : supId};
+        fetch('/owner/cart/checkout', {
+            method: 'POST',
+            headers: {
+                [header]: token,
+                'charset': 'UTF-8',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(mapToSend),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data["message"]) {
+                window.location.assign("/owner/home");
+            } else {
+                window.location.assign("/owner/buy-medicines");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }
+</script>
+
+</body>
+</html>

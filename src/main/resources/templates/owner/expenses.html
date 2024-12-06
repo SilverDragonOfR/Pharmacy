@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pharmacy | Expenses</title>
+    <meta name="description" content="">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: 2px solid #218838;
+            border-radius: 5px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .top-bar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .top-bar .logo-container {
+            width: 60px;
+            height: 60px;
+            background-image: url('/images/logo.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+        }
+        
+        .top-bar .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container"></div>
+        <span class="company-name">MedixPro</span>
+    </div>
+    <div class="container">
+        <h1>List of Expenses</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Owner</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="expense : ${expenses}">
+                    <td th:text="${expense.dateOfExpense}"></td>
+                    <td th:text="${expense.expenseType.type}"></td>
+                    <td th:text="${expense.owner.first_name}"></td>
+                    <td th:text="'₹'+${expense.amount}"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="text-align: center;">
+            <button onclick="add_expense()">Add Expense</button>
+            <button onclick="back()">Back</button>
+        </div>
+    </div>
+</body>
+<script th:inline="javascript">
+    function add_expense() {
+        window.location.assign("/owner/add-expense");
+    }
+
+    function back() {
+        window.location.assign("/");
+    }
+</script>
+</html>
